@@ -15,6 +15,8 @@ r := gin.Default()
   Instance:       "pod1", //pod-name or hostname
   MonitorUri:     []string{}, //empty slice monitor all uri.
   ExcludeMethod:  []string{"HEAD"}, //exclude http method
+  Percentage:     90,      //valid 1-100
+  ExcludeURLPrefix: []string{"/test", "/favicon.ico"} //exclude url prefix
  }
 
 namespace := "app"

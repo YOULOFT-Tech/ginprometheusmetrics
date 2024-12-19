@@ -1,10 +1,11 @@
 package main
 
 import (
+    "github.com/YOULOFT-Tech/ginprometheusmetrics"
     "github.com/gin-gonic/gin"
-    //"gitlab.ylwnl.com/middleware/ginprometheusmetrics"
     "log"
     "net/http"
+    "os"
 )
 
 func main() {
@@ -21,19 +22,20 @@ func main() {
 }
 
 func setPrometheus(engine *gin.Engine) {
-    //namespace := "test-szl"
-    //hostName, _ := os.Hostname()
-    //opts := ginprometheusmetrics.PrometheusOpts{
-    //	PushInterval:     uint8(30),
-    //	PushGateWayUrl:   "http://127.0.0.1:8080",
-    //	JobName:          "test-szl",
-    //	Instance:         hostName,         //pod-name or hostname
-    //	MonitorUri:       []string{},       //empty slice monitor all uri.
-    //	ExcludeMethod:    []string{"HEAD"}, //exclude http method
-    //	Percentage:       90,
-    //	ExcludeURLPrefix: []string{"/test", "favicon.ico"},
-    //}
-    //
-    //ginprometheusmetrics.NewPrometheus(namespace, opts, nil).Use(engine)
+    namespace := "test-szl"
+
+    hostName, _ := os.Hostname()
+    opts := ginprometheusmetrics.PrometheusOpts{
+        PushInterval:     uint8(30),
+        PushGateWayUrl:   "http://127.0.0.1:8080",
+        JobName:          "test-szl",
+        Instance:         hostName,         //pod-name or hostname
+        MonitorUri:       []string{},       //empty slice monitor all uri.
+        ExcludeMethod:    []string{"HEAD"}, //exclude http method
+        Percentage:       56,
+        ExcludeURLPrefix: []string{"/test", "/favicon.ico"},
+    }
+
+    ginprometheusmetrics.NewPrometheus(namespace, opts, nil).Use(engine)
 
 }

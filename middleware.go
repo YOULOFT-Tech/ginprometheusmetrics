@@ -62,7 +62,8 @@ func NewPrometheus(ns string, opts PrometheusOpts, metrics []DefineMetric) *prom
 	}
 
 	// if percentage is illegal,set to default
-	if opts.Percentage <= 0 || opts.Percentage > 100 {
+
+	if opts.Percentage < 0 || opts.Percentage > 100 {
 		opts.Percentage = defaultPercentage
 	}
 
@@ -101,7 +102,6 @@ func NewPrometheus(ns string, opts PrometheusOpts, metrics []DefineMetric) *prom
 func (p *prometheusMiddleware) Use(e *gin.Engine) {
 	e.Use(p.promethuesHandlerFunc())
 	go p.pushMetrics()
-
 }
 
 // graceful shutdown
@@ -153,6 +153,12 @@ func (p *prometheusMiddleware) SetLogger(w io.Writer) {
 func (p *prometheusMiddleware) promethuesHandlerFunc() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
+
+		// if percentage is 0, do not push
+		if p.opts.Percentage == 0 {
+			c.Next()
+			return
+		}
 
 		// random number between 1 and 100
 		rng := rand.New(rand.NewSource(time.Now().UnixNano()))
